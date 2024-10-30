@@ -108,7 +108,7 @@ int main()
             // show the pushed character
             printf("%c\n", str[i]);
         }
-    }
+        }
     while (s->top != -1)
     {
         prefix[--j] = pop(s);

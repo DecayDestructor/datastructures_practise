@@ -37,7 +37,6 @@ struct mega_queue *initialize_mega_queue()
 void add_to_queue(struct mega_queue *mq, int queue_number, int item)
 {
     struct Queue *q = mq->queues[queue_number];
-    // printf("%d", q->rear);
     if (q->rear == SIZE - 1)
     {
         printf("Queue Overflow\n");
