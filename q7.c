@@ -38,7 +38,7 @@ struct Queue *createQueue(int size)
 
 int isEmpty(struct Queue *queue)
 {
-    return queue->front == -1
+    return queue->front == -1;
 }
 
 // Function to check if the queue is full
@@ -74,7 +74,10 @@ int dequeue(struct Queue *queue)
     }
     int item = queue->arr[queue->front];
     if (queue->front == queue->rear)
+    {
+        printf("Queue is full\n");
         queue->front = queue->rear = -1;
+    }
     else
         queue->front = (queue->front + 1) % queue->size;
     return item;
