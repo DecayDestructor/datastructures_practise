@@ -15,7 +15,7 @@ struct Queue
 
 struct mega_queue
 {
-    struct Queue *queues[SIZE];
+    struct Queue **queues;
 };
 
 // Function to initialize the mega queue
@@ -23,6 +23,7 @@ struct mega_queue
 struct mega_queue *initialize_mega_queue()
 {
     struct mega_queue *mq = (struct mega_queue *)malloc(sizeof(struct mega_queue));
+    mq->queues = (struct Queue **)malloc(SIZE * sizeof(struct Queue));
     for (int i = 0; i < SIZE; i++)
     {
         mq->queues[i] = (struct Queue *)malloc(sizeof(struct Queue));
