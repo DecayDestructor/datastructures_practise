@@ -1,42 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#define SIZE 1000
-
-struct stack
+#include <stdbool.h>
+#define size 1000
+struct Stack
 {
-    char arr[SIZE];
     int top;
+    char *arr;
+    // int sizeStack;
 };
 
-void pop(struct stack *stk)
+void initliaseStack(struct Stack *stk)
 {
-    if (stk->top == -1)
-    {
-        printf("Stack underflow\n");
-        return;
-    }
-    else
-    {
-        stk->top--;
-    }
+    stk->top = -1;
+    stk->arr = (char *)malloc(sizeof(char) * size);
+    // stk->sizeStack = size;
 }
 
-void push(struct stack *stk, char ch)
+void push(struct Stack *stk, char val)
 {
-    if (stk->top == SIZE - 1)
+    if (stk->top == size - 1)
     {
         printf("Stack overflow\n");
         return;
     }
-    stk->arr[++stk->top] = ch;
+    stk->top++;
+    stk->arr[stk->top] = val;
 }
 
-struct stack *initialize()
+void pop(struct Stack *stk)
 {
-    struct stack *stk = (struct stack *)malloc(sizeof(struct stack));
-    stk->top = -1;
-    return stk;
+    if (stk->top < 0)
+    {
+        printf("Stack underflow\n");
+        return;
+    }
+    stk->top--;
+}
+char top(struct Stack *stk)
+{
+    if (stk->top < 0)
+    {
+        printf("Stack underflow\n");
+        return '\0';
+    }
+    return stk->arr[stk->top];
 }
 
 int precedence(char op)
@@ -58,16 +65,16 @@ int precedence(char op)
 
 int main()
 {
-    struct stack *stk = initialize();
+    struct Stack *stk = (struct Stack *)malloc(sizeof(struct Stack));
+    initliaseStack(stk);
+
     char str[100];
     printf("Enter an infix expression: ");
     scanf("%s", str);
     char ans[100];
     int j = 0;
-
     for (int i = 0; str[i] != '\0'; i++)
     {
-        // infix to postfix
         if (str[i] >= 'a' && str[i] <= 'z')
         {
             ans[j++] = str[i];
@@ -78,18 +85,18 @@ int main()
         }
         else if (str[i] == ')')
         {
-            while (stk->top != -1 && stk->arr[stk->top] != '(')
+            while (stk->top != -1 && top(stk) != '(')
             {
-                ans[j++] = stk->arr[stk->top];
+                ans[j++] = top(stk);
                 pop(stk);
             }
-            pop(stk); // Pop '('
+            pop(stk);
         }
         else
         {
-            while (stk->top != -1 && precedence(stk->arr[stk->top]) >= precedence(str[i]))
+            while (stk->top != -1 && (precedence(top(stk)) <= precedence(str[i])))
             {
-                ans[j++] = stk->arr[stk->top];
+                ans[j++] = top(stk);
                 pop(stk);
             }
             push(stk, str[i]);
@@ -105,5 +112,7 @@ int main()
     }
     ans[j] = '\0';
     printf("Postfix expression: %s\n", ans);
+    free(stk->arr);
+    free(stk);
     return 0;
 }

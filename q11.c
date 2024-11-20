@@ -20,6 +20,7 @@ struct Node *createNode(int value)
     node->data = value;
     node->next = NULL;
     node->prev = NULL;
+    return node;
 }
 
 void displayList(struct Node *head)
@@ -57,34 +58,71 @@ struct Node *split(struct Node *head)
 
 struct Node *merge(struct Node *left, struct Node *right)
 {
-    if (left == NULL)
-    {
-        return right;
-    }
-    if (right == NULL)
-    {
-        return left;
-    }
+    // if (left == NULL)
+    // {
+    //     return right;
+    // }
+    // if (right == NULL)
+    // {
+    //     return left;
+    // }
+    // if (left->data <= right->data)
+    // {
+    //     left->next = merge(left->next, right);
+    //     if (left->next != NULL)
+    //     {
+    //         left->next->prev = left;
+    //     }
+    //     left->prev = NULL;
+    //     return left;
+    // }
+    // else
+    // {
+    //     right->next = merge(left, right->next);
+    //     if (right->next != NULL)
+    //     {
+    //         right->next->prev = right;
+    //     }
+    //     right->prev = NULL;
+    //     return right;
+    // }
+    struct Node *ptr = createNode(0);
     if (left->data <= right->data)
     {
-        left->next = merge(left->next, right);
-        if (left->next != NULL)
-        {
-            left->next->prev = left;
-        }
-        left->prev = NULL;
-        return left;
+        ptr = left;
+        left = left->next;
     }
     else
     {
-        right->next = merge(left, right->next);
-        if (right->next != NULL)
-        {
-            right->next->prev = right;
-        }
-        right->prev = NULL;
-        return right;
+        ptr = right;
+        right = right->next;
     }
+    while (left != NULL && right != NULL)
+    {
+        if (left->data < right->data)
+        {
+            ptr->next = left;
+            left->prev = ptr;
+            left = left->next;
+        }
+        else
+        {
+            ptr->next = right;
+            right->prev = ptr;
+            right = right->next;
+        }
+    }
+    if (left != NULL)
+    {
+        ptr->next = left;
+        left->prev = ptr;
+    }
+    else if (right != NULL)
+    {
+        ptr->next = right;
+        right->prev = ptr;
+    }
+    return ptr;
 }
 
 struct Node *mergeSort(struct Node *head)
